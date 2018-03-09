@@ -129,65 +129,154 @@ if (!is_numeric($vat_rate)) {
 $vat = $vat_rate * $total / 100;
 $gtotal = $total + $vat;
 
-$baseFolder = dirname(__FILE__) . '/invoices/';
-$tplFilename = $_REQUEST['ivform_file'];
-
-if (strpos($tplFilename, '/') !== false) {
-    // prevent directory traversal
-    header('HTTP/1.0 400 Bad Request');
-    die;
-}
-
 if (isset($_POST['mark_entries_as_cleared']) && $_POST['mark_entries_as_cleared'] == 1) {
     $database->setTimeEntriesAsCleared($invoiceArray);
 }
 
-// ---------------------------------------------------------------------------
+if (isset($_POST['print'])) {
+    $baseFolder = dirname(__FILE__) . '/invoices/';
+    $tplFilename = $_REQUEST['ivform_file'];
 
-// totally unneccessary
-unset($customer['password']);
-unset($customer['passwordResetHash']);
-
-$model = new Kimai_Invoice_PrintModel();
-$model->setEntries($invoiceArray);
-$model->setAmount($total);
-$model->setVatRate($vat_rate);
-$model->setTotal($gtotal);
-$model->setVat($vat);
-$model->setCustomer($customer);
-$model->setProjects($projectObjects);
-$model->setInvoiceId($invoiceID);
-
-$model->setBeginDate($beginDate);
-$model->setEndDate($endDate);
-$model->setInvoiceDate(time());
-$model->setDateFormat($kga->getDateFormat(2));
-$model->setCurrencySign($kga->getCurrencySign());
-$model->setCurrencyName($kga->getCurrencyName());
-$model->setDueDate(mktime(0, 0, 0, date('m') + 1, date('d'), date('Y')));
-
-// ---------------------------------------------------------------------------
-$renderers = [
-    'odt' => new Kimai_Invoice_OdtRenderer(),
-    'html' => new Kimai_Invoice_HtmlRenderer(),
-    'pdf' => new Kimai_Invoice_HtmlToPdfRenderer()
-];
-
-/* @var $renderer Kimai_Invoice_AbstractRenderer */
-foreach ($renderers as $rendererType => $renderer) {
-    $renderer->setTemplateDir($baseFolder);
-    $renderer->setTemplateFile($tplFilename);
-    $renderer->setTemporaryDirectory(APPLICATION_PATH . '/temporary');
-    try {
-        if ($renderer->canRender()) {
-            $renderer->setModel($model);
-            $renderer->render();
-            return;
-        }
-    } catch (Exception $ex) {
-        die(sprintf($kga['lang']['ext_invoice']['failure'], $ex->getMessage()));
+    if (strpos($tplFilename, '/') !== false) {
+        // prevent directory traversal
+        header('HTTP/1.0 400 Bad Request');
+        die;
     }
-}
 
-// no renderer could be found
-die('Template does not exist or is incompatible: ' . $baseFolder . $tplFilename);
+    // totally unneccessary
+    unset($customer['password']);
+    unset($customer['passwordResetHash']);
+
+    $model = new Kimai_Invoice_PrintModel();
+    $model->setEntries($invoiceArray);
+    $model->setAmount($total);
+    $model->setVatRate($vat_rate);
+    $model->setTotal($gtotal);
+    $model->setVat($vat);
+    $model->setCustomer($customer);
+    $model->setProjects($projectObjects);
+    $model->setInvoiceId($invoiceID);
+
+    $model->setBeginDate($beginDate);
+    $model->setEndDate($endDate);
+    $model->setInvoiceDate(time());
+    $model->setDateFormat($kga->getDateFormat(2));
+    $model->setCurrencySign($kga->getCurrencySign());
+    $model->setCurrencyName($kga->getCurrencyName());
+    $model->setDueDate(mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+
+    // ---------------------------------------------------------------------------
+    $renderers = [
+        'odt' => new Kimai_Invoice_OdtRenderer(),
+        'html' => new Kimai_Invoice_HtmlRenderer(),
+        'pdf' => new Kimai_Invoice_HtmlToPdfRenderer()
+    ];
+
+    /* @var $renderer Kimai_Invoice_AbstractRenderer */
+    foreach ($renderers as $rendererType => $renderer) {
+        $renderer->setTemplateDir($baseFolder);
+        $renderer->setTemplateFile($tplFilename);
+        $renderer->setTemporaryDirectory(APPLICATION_PATH . '/temporary');
+        try {
+            if ($renderer->canRender()) {
+                $renderer->setModel($model);
+                $renderer->render();
+                return;
+            }
+        } catch (Exception $ex) {
+            die(sprintf($kga['lang']['ext_invoice']['failure'], $ex->getMessage()));
+        }
+    }
+
+    // no renderer could be found
+    die('Template does not exist or is incompatible: ' . $baseFolder . $tplFilename);
+
+} elseif (isset($_POST['vTiger'])) {
+    try {
+        $client = new Salaros\Vtiger\VTWSCLib\WSClient('http://demo7.vtexperts.com/vtigercrm7demo/', 'demo', 'yhGaR9dENYrJGj6v');
+
+        $projectID = reset($_REQUEST['projectID']);
+        $accountId = '11x' . $projectID;
+        $product_1_id = '14x1331';
+        $service_1_id = '25x7606';
+        $CRM_user_id = '19x1';
+
+        $firstTimeEntry = reset($invoiceArray);
+
+        $valuemap = [
+            'elementType' => 'Invoice',
+
+            'assigned_user_id' => $CRM_user_id,
+            'subject' => (new DateTime())->format('m/y'),
+            'currency_id' => '21x1',
+            'bill_street' => 'strasse 1',
+            'ship_street' => 'strasse 1',
+            'description' => 'Beratungseinheit 100',
+            'duedate' => '2018-11-06',
+            'enable_recurring' => '0',
+            'end_period' => null,
+            'payment_duration' => null,
+            'potential_id' => null,
+            'invoicedate' => (new DateTime())->format('Y-m-d'),
+            'cf_797' => strftime('%Y-%m-%d', $firstTimeEntry['timestamp']),
+            'account_id' => $accountId,
+            'invoicestatus' => 'Created',
+            'productid' => $product_1_id,
+            'discount_type_final' => 'zero',  //  zero/amount/percentage
+            'shipping_handling_charge' => 0,
+            'shtax1' => 1,   // apply this tax, MUST exist in the application with this internal taxname
+            'adjustmentType' => 'add',  //  none/add/deduct
+            'hdnTaxType' => 'group', // group or individual  taxes are obtained from the application
+        ];
+        $counter = 1;
+        foreach ($invoiceArray as $entry) {
+            /*
+            Array (
+                [type] => timeSheet
+                [desc] => testen
+                [start] => 1520579700
+                [end] => 1520594100
+                [hour] => 4
+                [fDuration] => 4:00
+                [duration] => 14400
+                [timestamp] => 1520579700
+                [amount] => 400.00
+                [description] => eins
+                [rate] => 100.00
+                [comment] =>
+                [username] => admin
+                [useralias] =>
+                [location] =>
+                [trackingNr] =>
+                [projectID] => 1
+                [projectName] => TestProjekt
+                [projectComment] =>
+                [date] => 03/09/2018
+            )
+            */
+            $valuemap['LineItems'][] = [
+                'sequence_no' => $counter,
+                'productid' => $service_1_id,
+                'quantity' => $entry['hour'],
+                'listprice' => $entry['rate'],
+                'discount_percent' => null,
+                'discount_amount' => null,
+                'comment' => gmdate('d.m.Y', $entry['start']) . ': ' . $entry['description'],
+                'incrementondel' => '0',
+                'tax1' => $vat_rate
+            ];
+            ++$counter;
+        }
+        $invoice = $client->invokeOperation('create', [
+            'elementType' => 'Invoice',
+            'element' => json_encode($valuemap)
+        ]);
+        if ($invoice) {
+            echo 'Erfolgreich exportiert';
+        }
+    } catch (\Salaros\Vtiger\VTWSCLib\WSException $e) {
+        die($e->getMessage());
+    }
+} else {
+    die('Invalid action');
+}

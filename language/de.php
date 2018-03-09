@@ -479,6 +479,7 @@ Wählen Sie ein anderes Tabellenpräfix oder löschen Sie die existierenden Tabe
         'orderDateAsc' => 'Datum - älteste zuerst',
         'orderDateDesc' => 'Datum - neueste zuerst',
         'noDateSelected' => 'Fehlende Zeitspanne',
+        'vTigerExport' => 'vTiger Export'
     ],
 
     'ext_budget' => [

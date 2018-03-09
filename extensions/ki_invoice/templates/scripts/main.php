@@ -16,8 +16,7 @@
                     <label for="invoice_projectID"><?php echo $this->translate('ext_invoice:invoiceProject') ?></label>
                     <?php echo $this->formSelect('projectID[]', $this->preselected_project, [
                         'id' => 'invoice_projectID',
-                        'class' => 'formfield',
-                        'multiple' => 'multiple'
+                        'class' => 'formfield'
                     ], $this->projects); ?>
                 </div>
                 <div>
@@ -77,7 +76,8 @@
 		            <input type="checkbox" id="mark_entries_as_cleared" name="mark_entries_as_cleared" value="1">
 	            </div>
                 <div id="invoice_button">
-                    <input type="submit" class="btn_ok" value="<?php echo $this->translate('ext_invoice:invoiceButton') ?>">
+                    <input type="submit" name="print" class="btn_ok" value="<?php echo $this->translate('ext_invoice:invoiceButton') ?>">
+                    <input type="submit" name="vTiger" class="btn_ok" value="<?php echo $this->translate('ext_invoice:vTigerExport') ?>">
                 </div>
             </div>
         </form>
