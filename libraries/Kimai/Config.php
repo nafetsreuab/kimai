@@ -89,6 +89,7 @@ class Kimai_Config extends Kimai_ArrayObject
             'authenticator' => self::getDefault(self::DEFAULT_AUTHENTICATOR),
             'billable' => self::getDefault(self::DEFAULT_BILLABLE),
             'skin' => self::getDefault(self::DEFAULT_SKIN),
+            'effort_threshold' => 0,
             'conf' => new Kimai_Config_Settings()
         ];
     }
@@ -222,6 +223,14 @@ class Kimai_Config extends Kimai_ArrayObject
     public function setSkin($skin)
     {
         $this->set('skin', $skin);
+    }
+
+    /**
+     * @param int $effort_threshold
+     */
+    public function setEffortThreshold(int $effort_threshold)
+    {
+        $this->set('effort_threshold', $effort_threshold);
     }
 
     /**

@@ -80,6 +80,9 @@ if (isset($billable)) {
 if (isset($skin)) {
     $kga->setSkin($skin);
 }
+if (isset($effort_threshold)) {
+    $kga->setEffortThreshold($effort_threshold);
+}
 
 date_default_timezone_set($defaultTimezone);
 
@@ -100,7 +103,8 @@ $cleanup = [
     'authenticator',
     'defaultTimezone',
     'billable',
-    'skin'
+    'skin',
+    'effort_threshold'
 ];
 
 foreach ($cleanup as $varName) {

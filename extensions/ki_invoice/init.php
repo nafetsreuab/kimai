@@ -23,6 +23,9 @@ $database = Kimai_Registry::getDatabase();
 
 $user = checkUser();
 
+// Retrieve start & stop times
+$timeframe = get_timeframe();
+
 $view = new Kimai_View();
 $view->addBasePath(__DIR__ . '/templates/');
 
@@ -37,8 +40,27 @@ $tmpCustomers = array_keys($view->customers);
 $projects = $database->get_projects_by_customer($tmpCustomers[0], $kga['user']['groups']);
 
 $tmpProjects = [];
+$threshold = $kga->get('effort_threshold');
+$view->assign('effort_threshold', $threshold);
 foreach ($projects as $project) {
-    $tmpProjects[$project['projectID']] = $project['name'];
+    if ($threshold && $threshold > 0) {
+        $totalActivitiesTime = 0;
+        $projectTimes = $database->get_time_projects(
+            $timeframe[0],
+            $timeframe[1],
+            null,
+            null,
+            [$project['projectID']]
+        );
+        foreach ($projectTimes as $projectTime) {
+            $totalActivitiesTime += $projectTime['time'];
+        }
+        if ($totalActivitiesTime / 60 > $threshold) {
+            $tmpProjects[$project['projectID']] = $project['name'];
+        }
+    } else {
+        $tmpProjects[$project['projectID']] = $project['name'];
+    }
 }
 $view->assign('projects', $tmpProjects);
 
@@ -55,8 +77,7 @@ $view->assign('roundingOptions', $roundingOptions);
 // Extract all Invoice Templates in groups
 $invoice_template_files = [];
 $allInvoices = glob('invoices/*');
-foreach($allInvoices as $tplFile)
-{
+foreach($allInvoices as $tplFile) {
     $extension = 'HTML';
     $tplInfo = pathinfo($tplFile);
     if (!is_dir($tplFile)) {
@@ -67,9 +88,6 @@ foreach($allInvoices as $tplFile)
 }
 
 $view->assign('invoice_templates', $invoice_template_files);
-
-// Retrieve start & stop times
-$timeframe = get_timeframe();
 $view->assign('start_day', date($kga->getDateFormat(3), $timeframe[0]));
 $view->assign('end_day', date($kga->getDateFormat(3), $timeframe[1]));
 
