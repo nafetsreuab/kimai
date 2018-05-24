@@ -194,6 +194,7 @@ $query = "CREATE TABLE `${p}projects` (
   `effort` DECIMAL( 10, 2 ) NULL,
   `approved` DECIMAL( 10, 2 ) NULL,
   `internal` TINYINT( 1 ) NOT NULL DEFAULT 0,
+  `vat` int(2) NULL,
   INDEX ( `customerID` )
 ) AUTO_INCREMENT=1;";
 exec_query($query);

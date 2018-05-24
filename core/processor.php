@@ -239,7 +239,7 @@ switch ($axAction) {
                 $data['name'] = $_REQUEST['name'];
                 $data['comment'] = $_REQUEST['comment'];
                 $data['company'] = $_REQUEST['company'];
-                $data['vat'] = $_REQUEST['vat'];
+                $data['vat'] = getRequestInt($_REQUEST['vat']);
                 $data['contact'] = $_REQUEST['contactPerson'];
                 $data['timezone'] = $_REQUEST['timezone'];
                 $data['street'] = $_REQUEST['street'];
@@ -280,7 +280,7 @@ switch ($axAction) {
 
                 if (!checkGroupedObjectPermission('Customer', $id ? 'edit' : 'add', $oldGroups,
                     $_REQUEST['customerGroups'])) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[] = $kga['lang']['errorMessages']['permissionDenied'];
                 }
 
                 if (count($errorMessages) == 0) {
@@ -307,6 +307,7 @@ switch ($axAction) {
              */
             case 'project':
                 $data['name'] = $_REQUEST['name'];
+                $data['vat'] = getRequestInt($_REQUEST['vat']);
                 $data['customerID'] = $_REQUEST['customerID'];
                 $data['comment'] = $_REQUEST['projectComment'];
                 $data['visible'] = getRequestBool('visible');
@@ -333,7 +334,7 @@ switch ($axAction) {
 
                 if (!checkGroupedObjectPermission('Project', $id ? 'edit' : 'add', $oldGroups,
                     $_REQUEST['projectGroups'])) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[] = $kga['lang']['errorMessages']['permissionDenied'];
                 }
 
                 if (count($errorMessages) == 0) {
@@ -341,7 +342,10 @@ switch ($axAction) {
                     if (!$id) {
                         $id = $database->project_create($data);
                     } else {
-                        $database->project_edit($id, $data);
+                        $result = $database->project_edit($id, $data);
+                        if ($result === false) {
+                            $errorMessages[] = $kga['lang']['errorMessages']['wrongData'];
+                        }
                     }
 
                     if (isset($_REQUEST['projectGroups'])) {
@@ -416,7 +420,7 @@ switch ($axAction) {
                 }
 
                 if (!checkGroupedObjectPermission('Activity', $id ? 'edit' : 'add', $oldGroups, $activityGroups)) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[] = $kga['lang']['errorMessages']['permissionDenied'];
                 }
 
                 if (count($errorMessages) == 0) {

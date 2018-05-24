@@ -453,6 +453,19 @@ function getRequestBool($name)
 }
 
 /**
+ * @param $value
+ *
+ * @return int|null
+ */
+function getRequestInt($value)
+{
+    if (trim($value) != '') {
+        return (int)$value;
+    }
+    return null;
+}
+
+/**
  * Returns the decimal value from a request value where the number is still represented
  * in the location specific way.
  *

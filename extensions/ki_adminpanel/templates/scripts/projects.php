@@ -11,6 +11,7 @@
 			<th width="25%"><?php echo $this->translate('project')?></th>
 			<th><?php echo $this->translate('customer')?></th>
 		<?php endif; ?>
+		<th width="25%"><?php echo $this->translate('vat')?></th>
 		<th width="25%"><?php echo $this->translate('groups')?></th>
 	</tr>
 </thead>
@@ -51,6 +52,7 @@
 						<?php echo $this->escape($this->ellipsis($row['customerName'], 30))?>
 					</td>
 				<?php endif; ?>
+				<td><?php echo $row['vat'] ?></td>
 				<td class="<?php if ($isHidden) { echo 'hidden'; } ?>">
 					<?php echo $this->escape($row['groups'])?>
 				</td>

@@ -602,6 +602,7 @@ class Kimai_Database_Mysql
         $data = $this->clean_data($data);
 
         $values['name'] = MySQL::SQLValue($data['name']);
+        $values['vat'] = MySQL::SQLValue($data['vat']);
         $values['comment'] = MySQL::SQLValue($data['comment']);
         $values['budget'] = MySQL::SQLValue($data['budget'], MySQL::SQLVALUE_NUMBER);
         $values['effort'] = MySQL::SQLValue($data['effort'], MySQL::SQLVALUE_NUMBER);
@@ -695,7 +696,7 @@ class Kimai_Database_Mysql
             }
         }
 
-        $numbers = ['budget', 'customerID', 'visible', 'internal', 'filter', 'effort', 'approved'];
+        $numbers = ['vat', 'budget', 'customerID', 'visible', 'internal', 'filter', 'effort', 'approved'];
         foreach ($numbers as $key) {
             if (!isset($data[$key])) {
                 continue;
@@ -2520,6 +2521,7 @@ class Kimai_Database_Mysql
                 $arr[$i]['projectID'] = $row['projectID'];
                 $arr[$i]['customerID'] = $row['customerID'];
                 $arr[$i]['name'] = $row['name'];
+                $arr[$i]['vat'] = $row['vat'];
                 $arr[$i]['comment'] = $row['comment'];
                 $arr[$i]['visible'] = $row['visible'];
                 $arr[$i]['filter'] = $row['filter'];

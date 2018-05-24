@@ -1187,6 +1187,11 @@ if ((int)$revisionDB < 1394) {
 // release of kimai 1.3.0
 // release of kimai 1.3.1
 
+if ((int)$revisionDB < 1395) {
+    Kimai_Logger::logfile('-- update to r1395');
+    exec_query("ALTER TABLE `${p}projects` ADD `vat` TINYINT(2) UNSIGNED NULL"); // 0 - 255
+}
+
 // ================================================================================
 // FINALIZATION: update DB version number
 // ================================================================================

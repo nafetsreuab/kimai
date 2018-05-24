@@ -54,6 +54,10 @@
                     <li><label for="customerID"><?php echo $this->translate('customer') ?>:</label>
                         <?php echo $this->formSelect('customerID', $this->project['customerID'], ['class' => 'formfield', 'style' => 'width:620px'], $this->customers); ?>
                     </li>
+	                <li>
+		                <label for="vat"><?php echo $this->translate('vat') ?>:</label>
+                        <?php echo $this->formText('vat', $this->project['vat']); ?> %
+	                </li>
                     <li><label for="visible"><?php echo $this->translate('visibility') ?>:</label>
                         <?php echo $this->formCheckbox('visible', '1', ['checked' => $this->project['visible'] || !$this->id]); ?>
                     </li>
