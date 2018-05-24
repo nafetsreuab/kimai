@@ -257,13 +257,13 @@ if (isset($_POST['print'])) {
             $valuemap['LineItems'][] = [
                 'sequence_no' => $counter,
                 'productid' => $service_1_id,
-                'quantity' => $entry['hour'],
+                'quantity' => ($entry['type'] === 'timeSheet') ? $entry['hour'] : $entry['duration'],
                 'listprice' => $entry['rate'],
                 'discount_percent' => null,
                 'discount_amount' => null,
                 'comment' => gmdate('d.m.Y', $entry['start']) . ': ' . $entry['description'],
                 'incrementondel' => '0',
-                'tax1' => $vat_rate
+                'tax1' => isset($projectObjects[0]['vat']) ? $projectObjects[0]['vat'] : 0
             ];
             ++$counter;
         }
