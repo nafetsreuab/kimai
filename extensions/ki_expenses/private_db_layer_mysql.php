@@ -421,3 +421,28 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
     }
     return $arr;
 }
+
+/**
+ * @param string $q
+ *
+ * @return bool|array
+ */
+function get_goods(string $q)
+{
+    $database = Kimai_Registry::getDatabase();
+    $conn = $database->getConnectionHandler();
+    $p = $database->getTablePrefix();
+
+    $where = '';
+    if (trim($q) !== '') {
+        $where = 'WHERE `name` LIKE "%' . $q . '%"';
+    }
+
+    $result = $conn->Query('SELECT * FROM ' . $p . 'goods ' . $where . ' ORDER BY `name`');
+
+    if (!$result) {
+        return false;
+    } else {
+        return $conn->RecordsArray(MYSQLI_ASSOC);
+    }
+}

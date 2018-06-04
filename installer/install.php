@@ -228,7 +228,7 @@ exec_query($query);
 $query = "CREATE TABLE `${p}configuration` (
   `option` varchar(190) NOT NULL,
   `value` varchar(255) NOT NULL,
-  PRIMARY KEY  (`option`)
+  PRIMARY KEY (`option`)
 );";
 exec_query($query);
 
@@ -257,7 +257,7 @@ $query = "CREATE TABLE `${p}expenses` (
   `designation` text NOT NULL,
   `comment` text NULL,
   `commentType` tinyint(1) NOT NULL DEFAULT '0',
-  `refundable` tinyint(1) unsigned NOT NULL default '0',
+  `refundable` tinyint(1) UNSIGNED NOT NULL default '0',
   `cleared` tinyint(1) NOT NULL DEFAULT '0',
   `multiplier` decimal(10,2) NOT NULL DEFAULT '1.00',
   `value` decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -270,6 +270,14 @@ $query = "CREATE TABLE `${p}statuses` (
 `statusID` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 `status` VARCHAR( 200 ) NOT NULL
 ) ENGINE = InnoDB";
+exec_query($query);
+
+$query = "CREATE TABLE `${p}goods` (
+  `goodsID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  INDEX ( `name` ),
+) ENGINE=InnoDB";
 exec_query($query);
 
 // The included script only sets up the initial permissions.

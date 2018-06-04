@@ -104,7 +104,7 @@ function expense_extension_set_TableWidths() {
 	($expenses.innerHeight()-$expenses.find("table").outerHeight()>0)?scr=0:scr=scroller_width; // width of expenses table depending on scrollbar or not
 	$expenses.find("table").css("width",expenses_width-scr);
 	$("#expenses > div > table > tbody > tr > td.refundable").css("width", $("#expenses_head > table > tbody > tr > td.refundable").width());
-	
+
 	$("#expenses_head > table > tbody > tr > td.time").css("width", $("#expenses > div > table > tbody > tr > td.time").width());
 	$("#expenses_head > table > tbody > tr > td.value").css("width", $("#expenses > div > table > tbody > tr > td.value").width());
 	//$("#expenses_head > table > tbody > tr > td.refundable").css("width", $("#expenses > div > table > tbody > tr > td.refundable").width());
@@ -176,11 +176,11 @@ function expense_extension_triggerCHE() {
 // reloads timesheet, customer, project and activity tables
 //
 function expense_extension_reload() {
-	$.post(expense_extension_path + "processor.php", { 
-			axAction: "reload_exp", 
-			axValue: filterUsers.join(":")+'|'+filterCustomers.join(":")+'|'+filterProjects.join(":"), 
+	$.post(expense_extension_path + "processor.php", {
+			axAction: "reload_exp",
+			axValue: filterUsers.join(":")+'|'+filterCustomers.join(":")+'|'+filterProjects.join(":"),
 			id: 0,
-			first_day: new Date($('#pick_in').val()).getTime()/1000, 
+			first_day: new Date($('#pick_in').val()).getTime()/1000,
 			last_day: new Date($('#pick_out').val()).getTime()/1000
 		},
 		function(data) {
@@ -238,22 +238,28 @@ function comment(id) {
 
 // ----------------------------------------------------------------------------------------
 // pastes the current date and time in the outPoint field of the
-// change dialog for timesheet entries 
+// change dialog for timesheet entries
 //
 //         $view->pasteValue = date("d.m.Y - H:i:s",$kga['now']);
 //
 function expense_pasteNow(value) {
-	now = new Date();
+	var now = new Date();
 
-	H = now.getHours();
-	i = now.getMinutes();
-	s = now.getSeconds();
+	var H = now.getHours();
+	var i = now.getMinutes();
+	var s = now.getSeconds();
 
-	if (H<10) H = "0"+H;
-	if (i<10) i = "0"+i;
-	if (s<10) s = "0"+s;
+	if (H < 10) {
+		H = "0" + H;
+	}
+	if (i < 10) {
+		i = "0" + i;
+	}
+	if (s < 10) {
+		s = "0" + s;
+	}
 
-	time  = H + ":" + i + ":" + s;
+	var time  = H + ":" + i + ":" + s;
 
 	$("#edit_time").val(time);
 }

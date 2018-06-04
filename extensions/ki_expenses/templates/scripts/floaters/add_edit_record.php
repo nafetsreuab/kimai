@@ -42,6 +42,12 @@ $autoSelection = $this->kga->getSettings()->isUseAutoSelection();
         <div id="floater_tabs" class="floater_content">
             <fieldset id="general">
                 <ul>
+	                <li>
+		                <div class="ui-widget">
+		                    <label for="goods">Produktsuche:</label>
+			                <input type="text" id="goods" autocomplete="off">
+		                </div>
+	                </li>
                     <li>
                         <label for="projectID"><?php echo $this->translate('project') ?>:</label>
                         <div class="multiFields"><?php
@@ -153,5 +159,22 @@ $autoSelection = $this->kga->getSettings()->isUseAutoSelection();
         $("#add_edit_expense_project_ID").val(selected_project);
         <?php endif; ?>
         $('#floater_innerwrap').tabs({selected: 0});
+
+	    $('#goods').autocomplete({
+		    source: expense_extension_path + 'processor.php?axAction=get_goods',
+		    focus: function(event, ui) {
+			    return false;
+		    },
+		    select: function(event, ui) {
+			    $('#edit_value').val(ui.item.price);
+			    $('#designation').val(ui.item.name);
+		    }
+	    }).data('ui-autocomplete')._renderItem = function( ul, item ) {
+		    return $('<li>')
+			    .attr('data-name', item.name)
+			    .attr('data-price', item.price)
+			    .append(item.name)
+			    .appendTo(ul);
+	    };
     });
 </script>

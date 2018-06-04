@@ -1191,6 +1191,15 @@ if ((int)$revisionDB < 1395) {
     Kimai_Logger::logfile('-- update to r1395');
     exec_query("ALTER TABLE `${p}projects` ADD `vat` TINYINT(2) UNSIGNED NULL"); // 0 - 255
 }
+if ((int)$revisionDB < 1396) {
+    $query = "CREATE TABLE `${p}goods` (
+  `goodsID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  INDEX (`name`)
+) ENGINE=InnoDB";
+    exec_query($query);
+}
 
 // ================================================================================
 // FINALIZATION: update DB version number

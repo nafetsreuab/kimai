@@ -1,2 +1,10 @@
 @import "setup.css.php";
 @import "tables.css.php";
+
+.ui-autocomplete {
+	z-index: 500;
+}
+
+.ui-autocomplete-loading {
+	background: white url("../../../libraries/jQuery/jquery-ui/ui-anim_basic_16x16.gif") right center no-repeat;
+}

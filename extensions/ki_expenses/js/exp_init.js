@@ -18,10 +18,8 @@
 
 /**
  * Initial javascript code for the timesheet extension.
- * 
+ *
  */
-
-
 
 // set path of extension
 var expense_extension_path = "../extensions/ki_expenses/";
@@ -38,12 +36,11 @@ var expense_projects_changed_hook_flag = 0;
 var expense_activities_changed_hook_flag = 0;
 
 $(document).ready(function(){
-
-    var expense_resizeTimer = null;
-    $(window).bind('resize', function() {
-       if (expense_resizeTimer) clearTimeout(expense_resizeTimer);
-       expense_resizeTimer = setTimeout(expense_extension_resize, 500);
-    });
-
-    
+	var expense_resizeTimer = null;
+	$(window).bind('resize', function () {
+	    if (expense_resizeTimer) {
+	        clearTimeout(expense_resizeTimer);
+	    }
+	    expense_resizeTimer = setTimeout(expense_extension_resize, 500);
+	});
 });

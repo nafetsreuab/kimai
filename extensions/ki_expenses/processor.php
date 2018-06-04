@@ -309,4 +309,10 @@ switch ($axAction) {
         echo json_encode(['errors' => $errors]);
         break;
 
+    case 'get_goods':
+        $term = isset($_GET['term']) ? strip_tags($_GET['term']) : '';
+
+        header('Content-Type: application/json;charset=utf-8');
+        echo json_encode(get_goods($term));
+        break;
 }
