@@ -168,6 +168,7 @@ $autoSelection = $this->kga->getSettings()->isUseAutoSelection();
 		    select: function(event, ui) {
 			    $('#edit_value').val(ui.item.price);
 			    $('#designation').val(ui.item.name);
+			    $('#comment').val(ui.item.description);
 		    }
 	    }).data('ui-autocomplete')._renderItem = function( ul, item ) {
 		    return $('<li>')

@@ -1201,6 +1201,11 @@ if ((int)$revisionDB < 1396) {
     exec_query($query);
 }
 
+if ((int)$revisionDB < 1397) {
+    $query = "ALTER TABLE `${p}goods` ADD `description` TEXT NOT NULL";
+    exec_query($query);
+}
+
 // ================================================================================
 // FINALIZATION: update DB version number
 // ================================================================================

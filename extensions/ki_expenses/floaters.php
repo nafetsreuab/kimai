@@ -62,7 +62,8 @@ switch ($axAction) {
                 'designation' => '',
                 'projectID' => array_keys($projects)[0],
                 'value' => '',
-                'multiplier' => 1
+                'multiplier' => 1,
+                'cleared' => false
             ];
 
             // check if this entry may be added

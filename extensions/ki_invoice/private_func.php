@@ -34,7 +34,7 @@ function invoice_get_data($start, $end, $projects, $filter_cleared, $short_form)
 {
     $database = Kimai_Registry::getDatabase();
 
-    $limitCommentSize = true;
+    $limitCommentSize = false;
     $results = [];
 
     // --------------------------------------------------------------------------------

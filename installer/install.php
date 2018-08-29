@@ -276,6 +276,7 @@ $query = "CREATE TABLE `${p}goods` (
   `goodsID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `description` TEXT NOT NULL,
   INDEX ( `name` ),
 ) ENGINE=InnoDB";
 exec_query($query);

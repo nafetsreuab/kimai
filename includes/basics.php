@@ -83,6 +83,9 @@ if (isset($skin)) {
 if (isset($effort_threshold)) {
     $kga->setEffortThreshold($effort_threshold);
 }
+if (isset($expense_threshold)) {
+    $kga->setExpenseThreshold($expense_threshold);
+}
 
 date_default_timezone_set($defaultTimezone);
 

@@ -281,7 +281,7 @@ switch ($axAction) {
         // validate day and time
         $new = "${edit_day}-${edit_time}";
         if (!Kimai_Format::check_time_format($new)) {
-            $errors[''] = $kga['lang']['TimeDateInputError'];
+            $errors[] = $kga['lang']['TimeDateInputError'];
         }
 
         // convert to internal time format
@@ -298,11 +298,11 @@ switch ($axAction) {
         $result = false;
         if ($id) {
             if (expense_edit($id, $data) === false) {
-                $errors[''] = $kga['lang']['error'];
+                $errors[] = $kga['lang']['error'];
             }
         } else {
             if (expense_create($kga['user']['userID'], $data) === false) {
-                $errors[''] = $kga['lang']['error'];
+                $errors[] = $kga['lang']['error'];
             }
         }
 

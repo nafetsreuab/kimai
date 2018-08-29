@@ -13,6 +13,7 @@
     "require": {
         "php": ">=5.5.0",
         "phpoffice/phpexcel": "1.8.*",
+        "salaros/vtwsclib-php": "^1.0",
         "tecnickcom/tcpdf": "^6.2.12",
         "tinybutstrong/tinybutstrong": "^3.10",
         "zendframework/zendframework1": "^1.12"

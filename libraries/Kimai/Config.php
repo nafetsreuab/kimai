@@ -90,6 +90,7 @@ class Kimai_Config extends Kimai_ArrayObject
             'billable' => self::getDefault(self::DEFAULT_BILLABLE),
             'skin' => self::getDefault(self::DEFAULT_SKIN),
             'effort_threshold' => 0,
+            'expense_threshold' => 0,
             'conf' => new Kimai_Config_Settings()
         ];
     }
@@ -226,11 +227,19 @@ class Kimai_Config extends Kimai_ArrayObject
     }
 
     /**
-     * @param int $effort_threshold
+     * @param int $effortThreshold
      */
-    public function setEffortThreshold(int $effort_threshold)
+    public function setEffortThreshold(int $effortThreshold)
     {
-        $this->set('effort_threshold', $effort_threshold);
+        $this->set('effort_threshold', $effortThreshold);
+    }
+
+    /**
+     * @param int $expenseThreshold
+     */
+    public function setExpenseThreshold(int $expenseThreshold)
+    {
+        $this->set('expense_threshold', $expenseThreshold);
     }
 
     /**

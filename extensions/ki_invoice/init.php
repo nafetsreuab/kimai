@@ -40,22 +40,39 @@ $tmpCustomers = array_keys($view->customers);
 $projects = $database->get_projects_by_customer($tmpCustomers[0], $kga['user']['groups']);
 
 $tmpProjects = [];
-$threshold = $kga->get('effort_threshold');
-$view->assign('effort_threshold', $threshold);
+$effortThreshold = $kga->get('effort_threshold');
+$expenseThreshold = $kga->get('expense_threshold');
+
+if (file_exists('../ki_expenses/private_db_layer_mysql.php')) {
+    include_once '../ki_expenses/private_db_layer_mysql.php';
+}
+
 foreach ($projects as $project) {
-    if ($threshold && $threshold > 0) {
+    if ($effortThreshold && $effortThreshold > 0 || $expenseThreshold && $expenseThreshold > 0) {
         $totalActivitiesTime = 0;
+
         $projectTimes = $database->get_time_projects(
+            $timeframe[0],
+            $timeframe[1],
+            null,
+            null,
+            [$project['projectID']],
+            null,
+            false
+        );
+        foreach ($projectTimes as $projectTime) {
+            $totalActivitiesTime += $projectTime['time'];
+        }
+
+        $expenses = expenses_by_project(
             $timeframe[0],
             $timeframe[1],
             null,
             null,
             [$project['projectID']]
         );
-        foreach ($projectTimes as $projectTime) {
-            $totalActivitiesTime += $projectTime['time'];
-        }
-        if ($totalActivitiesTime / 60 > $threshold) {
+
+        if ($totalActivitiesTime / 60 > $effortThreshold || isset($expenses[$project['projectID']]) && $expenses[$project['projectID']] > $expenseThreshold) {
             $tmpProjects[$project['projectID']] = $project['name'];
         }
     } else {

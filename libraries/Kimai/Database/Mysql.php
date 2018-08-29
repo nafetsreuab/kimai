@@ -4211,9 +4211,11 @@ class Kimai_Database_Mysql
      * @param array $customers filter for only this ID of a customer
      * @param array $projects filter for only this ID of a project
      * @param array $activities
+     * @param bool $cleared filter for cleared entries
+     *
      * @return array
      */
-    public function get_time_projects($start, $end, $users = null, $customers = null, $projects = null, $activities = null)
+    public function get_time_projects($start, $end, $users = null, $customers = null, $projects = null, $activities = null, $cleared = true)
     {
         $start = MySQL::SQLValue($start, MySQL::SQLVALUE_NUMBER);
         $end = MySQL::SQLValue($end, MySQL::SQLVALUE_NUMBER);
@@ -4228,6 +4230,9 @@ class Kimai_Database_Mysql
         }
         if ($end) {
             $whereClauses[] = "start < $end";
+        }
+        if (!$cleared) {
+            $whereClauses[] = 'cleared = 0';
         }
 
         $query = "SELECT start, end, projectID, (end - start) / 3600 * rate AS costs, fixedRate

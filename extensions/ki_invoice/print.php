@@ -193,7 +193,8 @@ if (isset($_POST['print'])) {
 
 } elseif (isset($_POST['vTiger'])) {
     try {
-        $client = new Salaros\Vtiger\VTWSCLib\WSClient('http://demo7.vtexperts.com/vtigercrm7demo/', 'demo', 'yhGaR9dENYrJGj6v');
+        #$client = new Salaros\Vtiger\VTWSCLib\WSClient('http://demo7.vtexperts.com/vtigercrm7demo/', 'demo', 'yhGaR9dENYrJGj6v');
+        $client = new Salaros\Vtiger\VTWSCLib\WSClient('https://demo.vtiger.com/', 'admin', 'FQnrHsam1TTHKXQL');
 
         $projectID = reset($_REQUEST['projectID']);
         $accountId = '11x' . $projectID;
@@ -230,42 +231,85 @@ if (isset($_POST['print'])) {
         ];
         $counter = 1;
         foreach ($invoiceArray as $entry) {
-            /*
-            Array (
-                [type] => timeSheet
-                [desc] => testen
-                [start] => 1520579700
-                [end] => 1520594100
-                [hour] => 4
-                [fDuration] => 4:00
-                [duration] => 14400
-                [timestamp] => 1520579700
-                [amount] => 400.00
-                [description] => eins
-                [rate] => 100.00
-                [comment] =>
-                [username] => admin
-                [useralias] =>
-                [location] =>
-                [trackingNr] =>
-                [projectID] => 1
-                [projectName] => TestProjekt
-                [projectComment] =>
-                [date] => 03/09/2018
-            )
-            */
-            $valuemap['LineItems'][] = [
-                'sequence_no' => $counter,
-                'productid' => $service_1_id,
-                'quantity' => ($entry['type'] === 'timeSheet') ? $entry['hour'] : $entry['duration'],
-                'listprice' => $entry['rate'],
-                'discount_percent' => null,
-                'discount_amount' => null,
-                'comment' => gmdate('d.m.Y', $entry['start']) . ': ' . $entry['description'],
-                'incrementondel' => '0',
-                'tax1' => isset($projectObjects[0]['vat']) ? $projectObjects[0]['vat'] : 0
-            ];
-            ++$counter;
+            if ($entry['type'] === 'timeSheet') {
+                /*
+                Array (
+                    [type] => timeSheet
+                    [desc] => testen
+                    [start] => 1520579700
+                    [end] => 1520594100
+                    [hour] => 4
+                    [fDuration] => 4:00
+                    [duration] => 14400
+                    [timestamp] => 1520579700
+                    [amount] => 400.00
+                    [description] => eins
+                    [rate] => 100.00
+                    [comment] =>
+                    [username] => admin
+                    [useralias] =>
+                    [location] =>
+                    [trackingNr] =>
+                    [projectID] => 1
+                    [projectName] => TestProjekt
+                    [projectComment] =>
+                    [date] => 03/09/2018
+                )
+                */
+                $valuemap['LineItems'][] = [
+                    'sequence_no' => $counter,
+                    'productid' => $service_1_id,
+                    'quantity' => ($entry['type'] === 'timeSheet') ? $entry['hour'] : $entry['duration'],
+                    'listprice' => $entry['rate'],
+                    'discount_percent' => null,
+                    'discount_amount' => null,
+                    'comment' => gmdate('d.m.Y', $entry['start']) . ': ' . $entry['description'],
+                    'incrementondel' => '0',
+                    'tax1' => isset($projectObjects[0]['vat']) ? $projectObjects[0]['vat'] : 0
+                ];
+                ++$counter;
+            }
+        }
+        $counter = 1;
+        foreach ($invoiceArray as $entry) {
+            if ($entry['type'] === 'expense') {
+                /*
+                Array (
+                    [type] => timeSheet
+                    [desc] => testen
+                    [start] => 1520579700
+                    [end] => 1520594100
+                    [hour] => 4
+                    [fDuration] => 4:00
+                    [duration] => 14400
+                    [timestamp] => 1520579700
+                    [amount] => 400.00
+                    [description] => eins
+                    [rate] => 100.00
+                    [comment] =>
+                    [username] => admin
+                    [useralias] =>
+                    [location] =>
+                    [trackingNr] =>
+                    [projectID] => 1
+                    [projectName] => TestProjekt
+                    [projectComment] =>
+                    [date] => 03/09/2018
+                )
+                */
+                $valuemap['LineItems'][] = [
+                    'sequence_no' => $counter,
+                    'productid' => $product_1_id,
+                    'quantity' => ($entry['type'] === 'timeSheet') ? $entry['hour'] : $entry['duration'],
+                    'listprice' => $entry['rate'],
+                    'discount_percent' => null,
+                    'discount_amount' => null,
+                    'comment' => gmdate('d.m.Y', $entry['start']) . ': ' . $entry['description'] . PHP_EOL . $entry['comment'],
+                    'incrementondel' => '0',
+                    'tax1' => isset($projectObjects[0]['vat']) ? $projectObjects[0]['vat'] : 0
+                ];
+                ++$counter;
+            }
         }
         $invoice = $client->invokeOperation('create', [
             'elementType' => 'Invoice',
