@@ -60,7 +60,7 @@
                     <select id="filter_cleared" name="filter_cleared">
                         <option value="-1" <?php if (!$this->kga->getSettings()->isHideClearedEntries()): ?> selected="selected" <?php endif; ?>><?php echo $this->translate('export_extension:cleared_all') ?></option>
                         <option value="1"><?php echo $this->translate('export_extension:cleared_cleared') ?></option>
-                        <option value="0" <?php if ($this->kga->getSettings()->isHideClearedEntries()): ?> selected="selected" <?php endif; ?>><?php echo $this->translate('export_extension:cleared_open') ?></option>
+                        <option value="0" selected="selected"><?php echo $this->translate('export_extension:cleared_open') ?></option>
                     </select>
                 </div>
                 <div>
